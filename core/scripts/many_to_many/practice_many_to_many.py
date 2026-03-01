@@ -1,3 +1,5 @@
+import random
+
 from core.models import Staff, Restaurant, StaffRestaurant
 from django.db import connection
 from pprint import pprint
@@ -100,8 +102,10 @@ def run():
   """
   Second option, where we can use the model manager methods like (add, clear, remove, and set)
   """
-  # staff.restaurants.clear()
-  staff.restaurants.add(restaurant_1, through_defaults={"salary": 28_000})
+  staff.restaurants.clear()
+  staff.restaurants.add(restaurant_1, through_defaults={"salary": 18_000})
+
+  staff.restaurants.set(Restaurant.objects.all()[:10], through_defaults={"salary": random.randint(20_000, 80_000)})
 
   """
   Using prefetch_related with StaffRestaurant model
