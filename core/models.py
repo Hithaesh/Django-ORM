@@ -66,17 +66,19 @@ class Sale(models.Model):
 
 class Staff(models.Model):
   name = models.CharField(max_length=255)
-  restaurants = models.ManyToManyField(Restaurant)
+  restaurants = models.ManyToManyField(Restaurant, through='StaffRestaurant')
 
   def __str__(self):
     return self.name
   
   
-# class StaffRestaurant(models.Model):
-#   staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
-#   restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-#   salary = models.DecimalField(max_digits=20, decimal_places=10, null=True)
+class StaffRestaurant(models.Model):
+  staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+  restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+  salary = models.DecimalField(max_digits=20, decimal_places=10, null=True)
 
+  def __str__(self):
+    return f"Staff: {self.staff} | Restaurant: {self.restaurant} | Salary: {self.salary}"
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
   email = models.EmailField(unique=True)

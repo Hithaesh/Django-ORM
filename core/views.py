@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Sum, Prefetch
-from core.models import Restaurant, Sale, Rating, Staff
+from core.models import Restaurant, Sale, Rating, Staff, StaffRestaurant
 from django.db import connection
 from django.utils import timezone
 from pprint import pprint
@@ -77,23 +77,32 @@ def index(request):
 
 
   # restaurants = Restaurant.objects.prefetch_related("ratings", monthly_sales).filter(ratings__rating=5)
-  restaurants = restaurants.annotate(total=Sum('sale__income'))
+  # restaurants = restaurants.annotate(total=Sum('sale__income'))
 
   ### PRACTICE QUESTIONS ###
   """
   Fetch all staff and list the names of restaurants they work at.
   """
-  staffs = Staff.objects.prefetch_related("restaurants")
+  # staffs = Staff.objects.prefetch_related("restaurants")
 
   """
   Fetch all restaurants and display:
   restaurant name
-  type
+  restaurant type
   all staff names
   """
-  # restaurants = 
-
+  # restaurants = Restaurant.objects.prefetch_related("sale_set").all()
   # print([r.total for r in restaurants])
-  # context = {'ratings': ratings}
-  context = {'restaurants': restaurants}
-  return render(request, 'index.html', context)
+
+
+  """
+  ManyToMany Relationship querying from the through table
+  """
+  jobs = StaffRestaurant.objects.select_related("staff", "restaurant").all()
+
+  for job in jobs:
+    print(job.staff.name)
+    print(job.restaurant.name)
+
+  # context = {'restaurants': restaurants}
+  return render(request, 'index.html')
