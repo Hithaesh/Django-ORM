@@ -110,8 +110,25 @@ def run():
   """
   Using prefetch_related with StaffRestaurant model
   
-  StaffRestaurant.objects.prefetch_related("staff", "restaurant").all()
+  jobs = StaffRestaurant.objects.prefetch_related("staff", "restaurant").all()
+
+  for job in jobs:
+    print(job.staff.name)
+    print(job.restaurant.name)
+
+  Step 1 — Fetch StaffRestaurant rows
+  Step 2 -- Staff.objects.get(id=job.staff_id)
+  Step 3 -- stores it in cache
+  Step 4 -- uses the cached data to display the name
+
+  This is N+1 query problem
   This help in mitigating N + 1 queries
+  How?
+
+  if prefetch_related is used, the workflow:
+  1. Fetch all the staffrestaurant ids
+  2. Query  — fetch all related Staff at once
+  3. Django builds in-memory maps
   """
 
   pprint(connection.queries)
