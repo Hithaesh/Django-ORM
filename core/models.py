@@ -55,13 +55,14 @@ class Rating(models.Model):
 class Sale(models.Model):
   restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, null=True)
   income = models.DecimalField(max_digits=8, decimal_places=2)
+  expenditure = models.DecimalField(max_digits=8, decimal_places=2, default=1)
   datetime = models.DateTimeField()
 
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
   def __str__(self):
-    return f"Restuarant: {self.restaurant} | Income: {self.income}"
+    return f"Restuarant: {self.restaurant} | Income: {self.income} | Expenditure: {self.expenditure}"
 
 
 class Staff(models.Model):
