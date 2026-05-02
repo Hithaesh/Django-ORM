@@ -28,10 +28,12 @@ class Restaurant(models.Model):
 
   name = models.CharField(max_length=100, validators=[validate_restuarant_name_startswith_a])
   website = models.URLField(default="")
+  capacity = models.PositiveSmallIntegerField(null=True, blank=True)
   date_opened = models.DateField()
   longitude = models.FloatField()
   latitude = models.FloatField()
   restaurant_type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.OTHER)
+  nickname = models.CharField(null=True, blank=True)
 
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
