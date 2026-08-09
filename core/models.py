@@ -85,7 +85,9 @@ class StaffRestaurant(models.Model):
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
   email = models.EmailField(unique=True)
+
   is_active = models.BooleanField(default=True)
+  is_staff = models.BooleanField(default=False)
   date_joined = models.DateTimeField(default=timezone.now)
 
   objects = UserManager()
@@ -95,3 +97,28 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
   def __str__(self):
     return f"Email: {self.email}"
+  
+
+class Product(models.Model):
+  name = models.CharField(max_length=100)
+  number_in_stocks = models.PositiveSmallIntegerField()
+
+  def __str__(self):
+    return self.name
+
+# class OrderItem(models.Model):
+#   product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#   order = models.ForeignKey("core.Order", on_delete=models.CASCADE)
+#   quantity = models.PositiveIntegerField()
+#   price = models.DecimalField()
+  
+
+
+class Order(models.Model):
+  product = models.ForeignKey(Product, on_delete=models.CASCADE)
+  number_of_items = models.PositiveSmallIntegerField()
+  # user
+  
+
+  def __str__(self):
+    return f"{self.number_of_items} x {self.product.name}"

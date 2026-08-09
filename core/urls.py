@@ -20,5 +20,6 @@ from django.urls import path
 from core import views
 
 urlpatterns = [
-  path('', views.index)
+  path('', views.index),
+  path('order/', views.order_product, name='order-product')
 ]

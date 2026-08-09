@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Sum, Prefetch
 from core.models import Restaurant, Sale, Rating, Staff, StaffRestaurant
 from django.db import connection
 from django.utils import timezone
 from pprint import pprint
+from core.forms import ProductOrderForm, StaffDetailsForm
+from django.db import transaction
 
 # Create your views here.
 
@@ -105,4 +107,30 @@ def index(request):
     print(job.restaurant.name)
 
   # context = {'restaurants': restaurants}
+
   return render(request, 'index.html')
+
+def send_email(email):
+   print(f"Email has been sent successfully to {email}.")
+
+from functools import partial
+def order_product(request):
+    if request.method == 'POST':
+        form = ProductOrderForm(request.POST)
+
+        if form.is_valid():
+            with transaction.atomic():
+              order = form.save()
+              
+              # # server crash
+              # import sys
+              # sys.exit(1)
+              order.product.number_in_stocks -= order.number_of_items
+              order.product.save()
+            
+            transaction.on_commit(partial(send_email, 'admin@admin.com '))
+            return redirect('order-product')
+    else:
+        form = ProductOrderForm()
+
+    return render(request, 'order.html', {'form': form})
